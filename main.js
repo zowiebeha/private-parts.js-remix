@@ -17,16 +17,30 @@ const getOrCreatePrivateStateFor = createAssociativeFactoryFrom(privateMethods);
 
 function SomeConstructor() { }
 
-// Example of private static state:
-// (not protected, unless you do Object.create(SomeConstructor), but then it's not a function instance.)
-SomeConstructor.doWorkWithoutConstructedInstances = function() {
+/*
+    Example of private static state access:
+    
+    Not inherited by derivative constructors, unless you use Object.create(SomeConstructor),
+    .. but then the result would not be a Function instance.
+*/
+SomeConstructor.doWorkUntiedToConstructedInstances = function() {
     const staticPrivateStore = getOrCreatePrivateStateFor(this);
     staticPrivateStore.privateMethodOne();
+    
+    // `fruit` is stored on SomeConstructor itself:
     console.log("private static prop:", staticPrivateStore.fruit);
 }
-SomeConstructor.doWorkWithoutConstructedInstances();
+SomeConstructor.doWorkUntiedToConstructedInstances();
 
-// Example of inheritable, instance-unique private state:
+/*
+    Example of inheritable, instance-unique private state access:
+    
+    Any derivative constructor Function instance with a `prototype` property
+    .. of SomeConstructor will inherit this functionality.
+    
+    The private state will be unique to, and accessed by constructed instances which
+    .. invoke their inherited `publicMethod`.
+*/
 SomeConstructor.prototype.publicMethod = function() {
   const instancePrivateStore = getOrCreatePrivateStateFor(this);
   instancePrivateStore.privateMethodOne();
