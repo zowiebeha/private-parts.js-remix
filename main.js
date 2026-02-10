@@ -5,6 +5,14 @@ const privateMethods = {
   privateMethodTwo() { console.log('hi from within some hidden state!') },
 }
 
+/*
+    Prevent modification.
+
+    See inside createAssociativeFactoryFrom for the use of
+    privateMethods as the [[Prototype]] of an empty private state store object.
+*/
+Object.freeze(privateMethods);
+
 const getOrCreatePrivateStateFor = createAssociativeFactoryFrom(privateMethods);
 
 function SomeConstructor() { }
